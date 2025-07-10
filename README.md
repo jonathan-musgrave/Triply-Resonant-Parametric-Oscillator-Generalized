@@ -1,0 +1,1 @@
+# Triply-Resonant-Parametric-Oscillator-Generalized
