@@ -15,20 +15,27 @@ PZs = abs(AZs).^2*CC;
 PZi = abs(AZi).^2*CCI;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%------stability of peak power-----%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Intensity = IS;
+Intensity_P = IP;
+Intensity_S = IS;
+Intensity_I = II;
 AA=zeros(Nrt,1);
 for ind = 1:Nrt
-    AA(ind)= max(Intensity(ind,:));
+    PP_P(ind)= max(Intensity_P(ind,:));
+    PP_S(ind)= max(Intensity_S(ind,:));
+    PP_I(ind)= max(Intensity_I(ind,:));
 end
 roundtrip=1:1:Nrt;
 FS=25;
 FS2=10;
 LW=3;
-figure(1);clf;
-plot(roundtrip,AA,'linewidth',LW)
+figure(1);clf;hold on;
+plot(roundtrip,PP_P,'-b','linewidth',LW)
+plot(roundtrip,PP_S,'-g','linewidth',LW)
+plot(roundtrip,PP_I,'-r','linewidth',LW)
 xlabel('round-trip number','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
 ylabel('peak power (W)','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
 set(gca,'FontName','Times New Roman','FontSize',FS,'FontWeight','bold','linewidth',LW)
+legend('Pump','Signal','Idler')
 %set(gca,'xtick',5000:5000:20000);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -395,16 +402,38 @@ tickrange = floor((Nw+1)/2)-floor(trange/dt):1:floor((Nw+1)/2)+floor(trange/dt);
 tt = t(tickrange)*1E12;
 [TM,RTM] = meshgrid(tt,roundtrip/1000);
 PS = zeros(Nrt,Nw);
+PI = zeros(Nrt,Nw);
+PP = zeros(Nrt,Nw);
 for i = 1:1:Nrt
     PS(i,:) = IS(i,:)./max(IS(i,:));
+    PI(i,:) = II(i,:)./max(II(i,:));
+    PP(i,:) = IP(i,:)./max(IP(i,:));
 end
 figure(6);clf;
+ax1 = subplot(1,3,1);
+hh=pcolor(TM,RTM,PP(roundtrip,tickrange));
+set(hh,'edgecolor','k','Marker','*')
+shading interp
+set(gca,'LineWidth',LW,'FontSize',FS)
+% load redblue;
+colormap(ax1,'hot');
+colorbar
+ylabel('roundtrip','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
+xlabel('time (ps)','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
+set(gca,'FontName','Times New Roman','FontSize',FS,'FontWeight','bold','linewidth',LW)
+%set(gca,'ytick',100:100:500);
+hco=colorbar;
+set(hco,'FontName','Times New Roman','FontSize',FS,'FontWeight','bold');
+title('Pump Evolution')
+set(gca,'CLIM',[0,1])
+%set(get(hco,'Title'),'string','signal W');
+ax2 = subplot(1,3,2);
 hh=pcolor(TM,RTM,PS(roundtrip,tickrange));
 set(hh,'edgecolor','k','Marker','*')
 shading interp
 set(gca,'LineWidth',LW,'FontSize',FS)
 % load redblue;
-colormap('redblue');
+colormap(ax2,'parula');
 colorbar
 ylabel('roundtrip','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
 xlabel('time (ps)','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
@@ -413,21 +442,16 @@ set(gca,'FontName','Times New Roman','FontSize',FS,'FontWeight','bold','linewidt
 hco=colorbar;
 set(hco,'FontName','Times New Roman','FontSize',FS,'FontWeight','bold');
 title('Signal Evolution')
+set(gca,'CLIM',[0,1])
 %set(get(hco,'Title'),'string','signal W');
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%-----pulse evolutionfor each roundtrip-----%%%%%%%%%%%%%%%%%%%%%%%%%
-roundtrip = 1:1:Nrt;
-tickrange = floor((Nw+1)/2)-floor(trange/dt):1:floor((Nw+1)/2)+floor(trange/dt);
-tt = t(tickrange)*1E12;
-[TM,RTM] = meshgrid(tt,roundtrip/1000);
-figure(66);clf;
-hh=pcolor(TM,RTM,II(roundtrip,tickrange));
+ax3 = subplot(1,3,3);
+hh=pcolor(TM,RTM,PI(roundtrip,tickrange));
 set(hh,'edgecolor','k','Marker','*')
 shading interp
 set(gca,'LineWidth',LW,'FontSize',FS)
-% load seismic;
-colormap(hot);
+% load redblue;
+colormap(ax3,'redblue');
 colorbar
 ylabel('roundtrip','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
 xlabel('time (ps)','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
@@ -437,6 +461,30 @@ hco=colorbar;
 set(hco,'FontName','Times New Roman','FontSize',FS,'FontWeight','bold');
 title('Idler Evolution')
 %set(get(hco,'Title'),'string','signal W');
+
+
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%-----pulse evolutionfor each roundtrip-----%%%%%%%%%%%%%%%%%%%%%%%%%
+% roundtrip = 1:1:Nrt;
+% tickrange = floor((Nw+1)/2)-floor(trange/dt):1:floor((Nw+1)/2)+floor(trange/dt);
+% tt = t(tickrange)*1E12;
+% [TM,RTM] = meshgrid(tt,roundtrip/1000);
+% figure(66);clf;
+% hh=pcolor(TM,RTM,II(roundtrip,tickrange));
+% set(hh,'edgecolor','k','Marker','*')
+% shading interp
+% set(gca,'LineWidth',LW,'FontSize',FS)
+% % load seismic;
+% colormap(hot);
+% colorbar
+% ylabel('roundtrip','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
+% xlabel('time (ps)','FontName','Times New Roman','FontSize',FS,'FontWeight','bold')
+% set(gca,'FontName','Times New Roman','FontSize',FS,'FontWeight','bold','linewidth',LW)
+% %set(gca,'ytick',100:100:500);
+% hco=colorbar;
+% set(hco,'FontName','Times New Roman','FontSize',FS,'FontWeight','bold');
+% title('Idler Evolution')
+% %set(get(hco,'Title'),'string','signal W');
 
 
 
