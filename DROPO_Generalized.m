@@ -10,7 +10,7 @@ eps_0 = 8.854E-12;           % dielectric constant in vacuum, F/m
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------Sim parameters---------%%%%%%%%%%%%%%%%%%%%%%%%
-Nw = 4000;             % slicing number for time
+Nw = 1200;             % slicing number for time
 Nzfi = 31;             % slicing number for PPLN1
 
 %%%% OPO Configuration %%%%%%%%
@@ -40,7 +40,7 @@ detunep = -0.022784571428571*alphas*0+-0.149124671281650;
 detunes = lamp0/lams0*detunep;
 detunei = lamp0/lami0*detunep;
 
-Nrt =4000;                     % roundtrip number
+Nrt =2000;                     % roundtrip number
 dk = 1*pi/L; % Phase mismatch
 
 name = strcat('dk_',num2str(dk./pi*L),'pi___','Ip0_',num2str(Ip0));
